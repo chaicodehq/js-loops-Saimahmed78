@@ -29,6 +29,20 @@
  *   sabziMandiBill([], { aloo: 30 })
  *   // => { items: [], totalBill: 0 }
  */
+
 export function sabziMandiBill(shoppingList, priceList) {
-  // Your code here
+  let totalBill = 0;
+  let items = [];
+  for (const [key, value] of Object.entries(priceList)) {
+    for (const element of shoppingList) {
+      if (element.name == key && value <= 80) {
+        let currentItemBill = element.qty * value;
+        element.cost = currentItemBill;
+        items.push(element);
+        totalBill += currentItemBill;
+      }
+    }
+  }
+
+  return { items, totalBill };
 }

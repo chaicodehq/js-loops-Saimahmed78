@@ -38,4 +38,83 @@
  */
 export function iplPointsTable(matches) {
   // Your code here
+  if (!Array.isArray(matches) || matches.length == 0) return [];
+  let result = {};
+
+  for (let i = 0; i < matches.length; i++) {
+    const match = matches[i];
+    let team1 = match.team1;
+    let team2 = match.team2;
+    if (!result[team1]) {
+      result[team1] = {
+        team: team1,
+        played: 0,
+        won: 0,
+        lost: 0,
+        tied: 0,
+        noResult: 0,
+        points: 0,
+      };
+    }
+    if (!result[team2]) {
+      result[team2] = {
+        team: team2,
+        played: 0,
+        won: 0,
+        lost: 0,
+        tied: 0,
+        noResult: 0,
+        points: 0,
+      };
+    }
+    switch (match.result) {
+      case "win":
+        if (match.winner === team1) {
+          result[team1].won += 1;
+          result[team1].points += 2;
+          result[team2].lost += 1;
+        } else {
+          result[team2].won += 1;
+          result[team2].points += 2;
+          result[team1].lost += 1;
+        }
+        result[team1].played += 1;
+        result[team2].played += 1;
+        break;
+      case "tie":
+        result[team2].played += 1;
+        result[team1].played += 1;
+        result[team1].points += 1;
+        result[team2].points += 1;
+        result[team1].tied += 1;
+        result[team2].tied += 1;
+        break;
+      case "no_result":
+        result[team1].played += 1;
+        result[team1].noResult += 1;
+        result[team1].points += 1;
+
+        result[team2].played += 1;
+        result[team2].noResult += 1;
+        result[team2].points += 1;
+        break;
+    }
+  }
+
+  let resultArray = Object.values(result).sort((a, b) => {
+    if (a.points !== b.points) {
+      console.log("Points are not equal")
+      return b.points - a.points;
+    } else {
+      console.log("points are equal")
+      return a.team.localeCompare(b.team);
+    }
+  });
+  console.log("Resulted Array", resultArray);
+  return resultArray;
 }
+
+iplPointsTable([
+  { team1: "KKR", team2: "SRH", result: "no_result" },
+  // { team1: "RCB", team2: "CSK", result: "tie" },
+]);
